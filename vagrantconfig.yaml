@@ -1,0 +1,21 @@
+# Configuration for Vagrant
+
+# Change to true if you can use nfs; using nfs significantly
+# improves performance.
+nfs: true
+
+# Turns on Vagrant debug flags, useful if you have issues with puppet
+debug: false
+
+# Start Virtualbox in GUI mode, useful for debuging issues during the vm startup
+gui: false
+
+# Used for any username/password combination
+username: {{ project_name }}
+password: {{ project_name }}
+
+server_name: {{ project_url }}
+
+# project details
+project_name: {{ project_name }}
+mount_point: /home/vagrant/{{ project_name }}

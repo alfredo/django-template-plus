@@ -1,0 +1,111 @@
+# Local settings for {{ project_name }}
+import os
+
+from {{ project_name }}.settings import *
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '{{ secret_key }}'
+
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+# Function to dinamically get absolute PATHS to the PROJECT ROOT.
+here = lambda *x: os.path.join(PROJECT_ROOT, '..', *x)
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+# Local database uses postgres
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '{{ project_name }}',
+        'USER': '{{ project_name }}',
+        'PASSWORD': '{{ project_name }}',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+
+USE_DEBUG_TOOLBAR = False
+
+if USE_DEBUG_TOOLBAR:
+    INSTALLED_APPS += ('debug_toolbar',)
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+    DEBUG_TOOLBAR_PANELS = (
+        'debug_toolbar.panels.version.VersionDebugPanel',
+        'debug_toolbar.panels.timer.TimerDebugPanel',
+        'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+        'debug_toolbar.panels.headers.HeaderDebugPanel',
+        'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+        'debug_toolbar.panels.template.TemplateDebugPanel',
+        'debug_toolbar.panels.sql.SQLDebugPanel',
+        'debug_toolbar.panels.signals.SignalDebugPanel',
+        'debug_toolbar.panels.logger.LoggingPanel',
+    )
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False,
+        'HIDE_DJANGO_SQL': False,
+        'SHOW_TEMPLATE_CONTEXT': True,
+        'SHOW_TOOLBAR_CALLBACK': lambda x: True,
+    }
+
+
+SITE_URL = 'http://local-{{ project_url }}'
+
+# Disable authentication
+BASIC_WWW_AUTHENTICATION = False
+
+USE_FILESYSTEM = True
+
+if USE_FILESYSTEM:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    STATIC_URL = '/static/'
+
+# Shipper configuration
+SHIPPER_FILE_STORAGE = 'wwwbydre.shipper.storage.ShipperFileSystemStorage'
+SHIPPER_AWS_BUCKET = 'shipper.beatsbydre.com'
+
+
+# Determines if the assets should be minified during the development
+USE_COMPRESS = False
+
+# compress
+if not USE_COMPRESS:
+    COMPRESS_ENABLED = False
+
+if USE_COMPRESS and USE_FILESYSTEM:
+    COMPRESS_ENABLED = True
+    COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+    COMPRESS_OFFLINE = False
+
+
+# Serve the assets locally
+COMPRESS_ENABLED = not DEBUG
+
+USE_FILESYSTEM = True
+
+if USE_FILESYSTEM:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    STATIC_URL = '/static/'
+
+# Determines if the assets should be minified during the development
+USE_COMPRESS = False
+
+# compress
+if not USE_COMPRESS:
+    COMPRESS_ENABLED = False
+
+if USE_COMPRESS and USE_FILESYSTEM:
+    COMPRESS_ENABLED = True
+    COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+    COMPRESS_OFFLINE = False
+
+
+# Serve the assets locally
+COMPRESS_ENABLED = not DEBUG
