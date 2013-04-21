@@ -60,7 +60,7 @@ Add AWS credentials to be used for the static files::
 
 Add the heroku remote::
 
-    git remote add heroku git@heroku.com:{{ heroku_app }}.git
+    git remote add production git@heroku.com:{{ heroku_app }}.git
 
 Deploy the application to heroku::
 
