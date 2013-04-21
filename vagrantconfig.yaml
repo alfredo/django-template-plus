@@ -14,7 +14,9 @@ gui: false
 username: {{ project_name }}
 password: {{ project_name }}
 
+# Recommended add to /etc/hosts
 server_name: {{ project_url }}
+server_ip: {{ project_ip }}
 
 # project details
 project_name: {{ project_name }}

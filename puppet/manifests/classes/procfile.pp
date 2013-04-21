@@ -1,13 +1,20 @@
 class procfile ($project_path, $project_name) {
-  package { 'foreman':
-    ensure   => 'installed',
+
+  $packages = [
+               'thor',
+               'dotenv',
+               'foreman',
+               ]
+
+  package { $packages:
+    ensure => 'latest',
     provider => 'gem',
   }
 
   exec { 'force-upstart':
     cwd => "/etc/init",
     command => "rm -rf /etc/init/$project_name*",
-    require => Package['foreman'],
+    require => Package[$packages],
   }
 
   exec { 'install-upstart':

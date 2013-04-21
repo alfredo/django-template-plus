@@ -1,0 +1,11 @@
+*.py[co]
+*.sw[po]
+.coverage
+pip-log.txt
+.DS_Store
+.noseids
+*~
+#*
+.#*
+.vagrant
+settings_local.py
