@@ -48,7 +48,7 @@ Setup the settings for the application::
 
 Add a secret key for the project::
 
-heroku config:set SECRET_KEY=
+  heroku config:set SECRET_KEY=
 
 
 Add AWS credentials to be used for the static files::
