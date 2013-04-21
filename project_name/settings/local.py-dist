@@ -52,7 +52,7 @@ if USE_DEBUG_TOOLBAR:
     }
 
 
-SITE_URL = 'http://local-{{ project_url }}'
+SITE_URL = 'http://{{ project_url }}'
 
 # Disable authentication
 BASIC_WWW_AUTHENTICATION = False
@@ -64,11 +64,6 @@ if USE_FILESYSTEM:
     THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     STATIC_URL = '/static/'
-
-# Shipper configuration
-SHIPPER_FILE_STORAGE = 'wwwbydre.shipper.storage.ShipperFileSystemStorage'
-SHIPPER_AWS_BUCKET = 'shipper.beatsbydre.com'
-
 
 # Determines if the assets should be minified during the development
 USE_COMPRESS = False

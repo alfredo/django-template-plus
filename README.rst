@@ -45,6 +45,19 @@ Setup the settings for the application::
 
   heroku config:set DJANGO_SETTINGS_MODULE={{ project_name }}.settings.production
 
+
+Add a secret key for the project::
+
+heroku config:set SECRET_KEY=
+
+
+Add AWS credentials to be used for the static files::
+
+  heroku config:set AWS_KEY=
+  heroku config:set AWS_SECRET=
+
+
+
 Add the heroku remote::
 
     git remote add heroku git@heroku.com:{{ heroku_app }}.git
@@ -52,6 +65,8 @@ Add the heroku remote::
 Deploy the application to heroku::
 
     git push heroku master
+
+
 
 
 Bootstraping the VM

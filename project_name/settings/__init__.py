@@ -3,8 +3,6 @@ import datetime
 import os
 import dj_database_url
 
-# from S3 import CallingFormat
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -23,6 +21,10 @@ env = lambda x: os.getenv(x)
 # Heroku DB requirements
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 # DATABASES['default']['ENGINE'] = 'django_postgrespool'
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = env('SECRET_KEY')
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -190,6 +192,7 @@ SEND_BROKEN_LINK_EMAILS = True
 
 ALLOWED_HOSTS = [
     '{{ project_url }}',
+    '{{ heroku_app }}.herokuapp.com',
 ]
 
 # Static assets handling
@@ -219,10 +222,9 @@ DEFAULT_FILE_STORAGE = '{{ project_name }}.common.storage.MediaS3Storage'
 
 # Static assets
 # AWS credentials
-# TODO: read from the environment
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-AWS_STORAGE_BUCKET_NAME = ''
+AWS_ACCESS_KEY_ID = env('AWS_KEY')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET')
+AWS_STORAGE_BUCKET_NAME = '{{ project_url }}'
 STATIC_FILES_VERSION = 'v0'
 COMPRESS_OFFLINE_MANIFEST = 'manifest.%s.json' % STATIC_FILES_VERSION
 
