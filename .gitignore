@@ -9,3 +9,4 @@ pip-log.txt
 .#*
 .vagrant
 settings_local.py
+local.py
