@@ -1,5 +1,4 @@
 .. {% comment %}
-
 Django template plus
 --------------------
 
@@ -15,9 +14,9 @@ Please note that requires ``Django`` and ``django-startproject-plus`` installed.
 
 Make sure you create the heroku app **before** running the command.
 
-Spawn the project by running this command where the project will be living::
+Spawn the project by running this command where the project will be living, please note that this doesn't require a checkout of this template, since it can be retrieved from an ``https`` location::
 
-    django-startproject.py PROJECT_NAME --template=../django-template-plus --extra_context='{"project_url": "PROJECT_URL", "heroku_app": "HEROKU_APP", "project_ip": "PROJECT_IP"}' --extension=py,rst,local,yaml,py-dist --name=Procfile
+    django-startproject.py PROJECT_NAME --template=https://github.com/alfredo/django-template-plus/archive/master.zip --extra_context='{"project_url": "PROJECT_URL", "heroku_app": "HEROKU_APP", "project_ip": "PROJECT_IP"}' --extension=py,rst,local,yaml,py-dist --name=Procfile
 
 
 Where:
