@@ -224,7 +224,7 @@ DEFAULT_FILE_STORAGE = '{{ project_name }}.common.storage.MediaS3Storage'
 # AWS credentials
 AWS_ACCESS_KEY_ID = env('AWS_KEY')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET')
-AWS_STORAGE_BUCKET_NAME = '{{ project_url }}'
+AWS_STORAGE_BUCKET_NAME = 'static.{{ project_url }}'
 STATIC_FILES_VERSION = 'v0'
 COMPRESS_OFFLINE_MANIFEST = 'manifest.%s.json' % STATIC_FILES_VERSION
 
