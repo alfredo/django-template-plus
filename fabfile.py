@@ -1,9 +1,10 @@
 import functools
+import random
 import os
 
 from datetime import datetime
 from fabric.api import local, env, lcd
-from fabric.colors import yellow, red
+from fabric.colors import yellow, red, green
 from fabric.contrib import console
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -67,6 +68,12 @@ def collectstatic():
 
 
 @only_outside_vm
+def syncdb():
+    print yellow('Syncing %s database.' % env.slug)
+    dj_heroku('syncdb --noinput', env.slug)
+
+
+@only_outside_vm
 def deploy(confirmation=''):
     """Deploys the given build."""
     confirmation = False if confirmation == 'False' else True
@@ -84,6 +91,7 @@ def deploy(confirmation=''):
         print yellow('Pushing changes to %s in Heroku.' % SLUG)
         local('git push %s master --force' % env.slug)
         collectstatic()
+        syncdb()
     print yellow('URL: %s' % env.url)
     print red('Done?')
     print '%s' % datetime.now()
@@ -91,3 +99,48 @@ def deploy(confirmation=''):
 
 def test():
     print red('We need tests!')
+
+
+def _get_secret_key():
+    return ("".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^"
+                                   "&*(-_=+)") for i in range(50)]))
+
+
+@only_outside_vm
+def setup_heroku():
+    msg = """"Executing this command will add the following Heroku
+environment variables ``DJANGO_SETTINGS_MODULE`` and  ``SECRET_KEY``.
+As well provision a heroku-postgresql:dev server, if no one has been created.
+"""
+    print green(msg)
+    if not console.confirm(yellow('Proceed?')):
+        print yellow('Phew, aborted.')
+        exit(1)
+    response = local('heroku config', capture=True)
+    response_list = response.splitlines()
+    # Verify this is a valid heroku setup
+    if not 'Config Vars' in response_list[0]:
+        print red('No heroku installation detected.')
+        exit(2)
+    # List of heroku required variables, any variable with a None value
+    # the user will be prompt for input.
+    heroku_settings = {
+        'DJANGO_SETTINGS_MODULE': 'playnshare.settings.production',
+        'SECRET_KEY': _get_secret_key(),
+        'AWS_KEY': None,
+        'AWS_SECRET': None,
+    }
+    for key, value in heroku_settings.items():
+        if filter(lambda x: key in x, response_list):
+            print yellow('Skipping existing %s value.' % key)
+            continue
+        if value is None:
+            value = raw_input("Input value for %s: " % key)
+        print green('Setting up %s value.' % key)
+        local("heroku config:set %s='%s'" % (key, value))
+    addons = local('heroku addons', capture=True).splitlines()
+    if filter(lambda x: 'heroku-postgresql' in x, addons):
+        print yellow('Existing heroku-postgresql installation found')
+    else:
+        print yellow('Adding heroku development database.')
+        local('heroku addons:add heroku-postgresql:dev')
