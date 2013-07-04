@@ -6,6 +6,16 @@ _config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.y
 CONF = _config
 MOUNT_POINT = CONF['mount_point']
 
+EXTRA_VARS = {
+  hosts: "vagrant",
+  host_user: "vagrant",
+  username: CONF['username'],
+  password: CONF['password'],
+  server_name: CONF['server_name'],
+  project_name: CONF['project_name'],
+  project_path: MOUNT_POINT,
+}
+
 
 Vagrant.configure("2") do |config|
   config.vm.box = "precise64"
@@ -18,24 +28,15 @@ Vagrant.configure("2") do |config|
   config.ssh.max_tries = 50
   config.ssh.timeout   = 300
 
+  config.vm.synced_folder ".", MOUNT_POINT
+
   # Virtualbox has issues with a large amount of shared files,
-  # So it is recommended to be mounted as NFS
-  config.vm.provider :virtualbox do |vb|
-    if CONF['nfs'] == false or RUBY_PLATFORM =~ /mswin(32|64)/
-      config.vm.synced_folder ".", MOUNT_POINT, id: "vagrant-root"
-    else
-      config.vm.synced_folder ".", MOUNT_POINT, :nfs => true, id: "vagrant-root"
+  # it is recommended to be mounted as NFS
+  config.vm.provider :virtualbox do |v, override|
+    if CONF['nfs'] == true
+      override.vm.synced_folder ".", MOUNT_POINT, :nfs => true, id: "vagrant-root"
     end
   end
-
-  config.vm.provider :vmware_fusion do |vb|
-    config.vm.synced_folder ".", MOUNT_POINT, id: "vagrant-root"
-    vb.vmx["memsize"] = "512"
-    vb.vmx["numvcpus"] = "1"
-    vb.vmx["displayName"] = CONF['server_name']
-    vb.vmx["annotation"] = CONF['server_name']
-  end
-
 
   # Add to /etc/hosts
   config.vm.network :private_network, ip: CONF['server_ip']
@@ -48,12 +49,6 @@ Vagrant.configure("2") do |config|
     if CONF['debug'] == true
       puppet.options = "--verbose --debug"
     end
-    puppet.facter = [
-                     ['username', CONF['username']],
-                     ['password', CONF['password']],
-                     ['project_path', MOUNT_POINT],
-                     ['project_name', CONF['project_name']],
-                     ['server_name', CONF['server_name']],
-                    ]
+    puppet.facter = EXTRA_VARS
   end
 end
