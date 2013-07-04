@@ -1,7 +1,16 @@
 import "classes/*.pp"
 
 Exec {
-  path => "/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin",
+  path => [
+           "/usr/local/sbin",
+           "/usr/local/bin",
+           "/usr/sbin",
+           "/usr/bin",
+           "/sbin",
+           "/bin",
+           "/opt/vagrant_ruby/bin",
+           "/opt/ruby/bin",
+           ]
 }
 
 class dev {
