@@ -125,7 +125,7 @@ As well provision a heroku-postgresql:dev server, if no one has been created.
     # List of heroku required variables, any variable with a None value
     # the user will be prompt for input.
     heroku_settings = {
-        'DJANGO_SETTINGS_MODULE': 'playnshare.settings.production',
+        'DJANGO_SETTINGS_MODULE': '{{ project_name }}.settings.production',
         'SECRET_KEY': _get_secret_key(),
         'AWS_KEY': None,
         'AWS_SECRET': None,
